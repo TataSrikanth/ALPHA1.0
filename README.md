@@ -1,9 +1,10 @@
 # 🌿 SkinCare-Chatbot
 
-![Chatbot Demo](./images/1.png)
-![Skincare AI](./images/2.png)
+![License](https://img.shields.io/github/license/JiteshShelke/SkinCare-Chatbot?color=blue)  
+![Stars](https://img.shields.io/github/stars/JiteshShelke/SkinCare-Chatbot?style=social)  
+![Issues](https://img.shields.io/github/issues/JiteshShelke/SkinCare-Chatbot)  
+![Forks](https://img.shields.io/github/forks/JiteshShelke/SkinCare-Chatbot?style=social)  
 
-![License](https://img.shields.io/github/license/yourusername/SkinCare-Chatbot?color=blue) ![Stars](https://img.shields.io/github/stars/yourusername/SkinCare-Chatbot?style=social) ![Issues](https://img.shields.io/github/issues/yourusername/SkinCare-Chatbot) ![Forks](https://img.shields.io/github/forks/yourusername/SkinCare-Chatbot?style=social)
 
 ## 🏥 About the Project
 **SkinCare-Chatbot** is an AI-powered chatbot that provides solutions to skin-related problems using **NLP & Machine Learning**. The chatbot uses **BERT-based sentence transformers** to understand user queries and return the most relevant answers. It also leverages **Named Entity Recognition (NER)** to extract important terms and expand queries for better accuracy. 🚀
@@ -59,7 +60,8 @@ python app.py
 The chatbot will be available at: [http://127.0.0.1:5000](http://127.0.0.1:5000) 🚀
 
 ## 🖼 UI Preview
-![Chatbot UI](images/chatbot_ui.png)
+![Chatbot UI](./images/2.png)
+
 
 ## 📌 API Usage
 ### Endpoint: `/ask`
