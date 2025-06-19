@@ -112,7 +112,7 @@ Pull requests are welcome! Feel free to fork, modify, and contribute.
 
 ## 🔗 Connect with Me
 
-- 🌐 [LinkedIn](https://linkedin.com/in/jitesh-shelke)
+- 🌐 [LinkedIn](https://www.linkedin.com/in/jitesh-shelke-702745286/)
 - 💻 [GitHub](https://github.com/JiteshShelke)
 
 ⭐ **If you liked this project, don't forget to star the repo!** ⭐
