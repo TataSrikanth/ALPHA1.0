@@ -2,9 +2,9 @@
 
 Welcome to the official repository of **SkinCare Chatbot**! 🚀 This project is an intelligent AI-powered chatbot designed to answer skincare-related queries using Natural Language Processing (NLP). Built with **Flask**, **MySQL**, **Sentence Transformers**, and a beautiful Admin Dashboard.
 
-🎥 **Watch the Project Demo Video**: [https://youtu.be/4MwdvFRCUos](https://youtu.be/4MwdvFRCUos)
+## 🎥 Watch the Demo
 
-[![SkinCare Chatbot Demo](https://via.placeholder.com/1280x720.png?text=SkinCare+Chatbot+Demo)](https://youtu.be/4MwdvFRCUos)
+[![SkinCare Chatbot Demo](https://img.youtube.com/vi/4MwdvFRCUos/0.jpg)](https://www.youtube.com/watch?v=4MwdvFRCUos)
 
 ---
 
@@ -91,7 +91,7 @@ Password: admin123
 
 ## 📸 Screenshots
 
-[![SkinCare Chatbot Demo](https://via.placeholder.com/1280x720.png?text=SkinCare+Chatbot+Demo)](https://youtu.be/4MwdvFRCUos)
+[![SkinCare Chatbot Demo](https://img.youtube.com/vi/4MwdvFRCUos/0.jpg)](https://www.youtube.com/watch?v=4MwdvFRCUos)
 
 ---
 
