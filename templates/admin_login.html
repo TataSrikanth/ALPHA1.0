@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Login - SkinCare Chatbot</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #111827;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .form-box {
+            background-color: #1f2937;
+            padding: 40px;
+            border-radius: 15px;
+            margin-top: 80px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.4);
+        }
+        .btn-danger {
+            background-color: #ef4444;
+            border: none;
+        }
+        .btn-danger:hover {
+            background-color: #dc2626;
+        }
+        label {
+            color: #d1d5db;
+        }
+    </style>
+</head>
+<body>
+    <div class="container d-flex justify-content-center">
+        <div class="form-box col-md-6">
+            <h2 class="mb-4 text-center">🛡️ Admin Login</h2>
+            <form method="POST">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username:</label>
+                    <input type="text" class="form-control" name="username" required>
+                </div>
+                <div class="mb-4">
+                    <label for="password" class="form-label">Password:</label>
+                    <input type="password" class="form-control" name="password" required>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-danger btn-lg">Login</button>
+                </div>
+            </form>
+
+            <!-- Flash messages -->
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                <div class="alert alert-warning mt-3">
+                  {% for message in messages %}
+                    <div>{{ message }}</div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% endwith %}
+
+            <!-- ✅ Back to Home Button -->
+            <div class="text-center mt-4">
+                <a href="{{ url_for('landing') }}" class="btn btn-outline-light">🏠 Back to Home</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

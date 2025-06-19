@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat History - SkinCare Chatbot</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #111827;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .history-box {
+            background-color: #1f2937;
+            padding: 40px;
+            border-radius: 15px;
+            margin-top: 80px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+        .table {
+            color: #d1d5db;
+        }
+        .logout-btn {
+            background-color: #ef4444;
+            border: none;
+        }
+        .logout-btn:hover {
+            background-color: #dc2626;
+        }
+        .back-btn {
+            background-color: #6c757d;
+            border: none;
+            color: white;
+            margin-right: 10px;
+        }
+        .back-btn:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2>📜 Chat History</h2>
+            <div>
+                <button onclick="history.back()" class="btn back-btn">← Back</button>
+                <a href="{{ url_for('logout') }}" class="btn logout-btn">Logout</a>
+            </div>
+        </div>
+
+        <div class="history-box mt-4">
+            {% if chats %}
+            <table class="table table-striped table-dark table-bordered">
+                <thead>
+                    <tr>
+                        <th>Question</th>
+                        <th>Answer</th>
+                        <th>Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for chat in chats %}
+                    <tr>
+                        <td>{{ chat.question }}</td>
+                        <td>{{ chat.answer }}</td>
+                        <td>{{ chat.timestamp }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>No chat history found.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

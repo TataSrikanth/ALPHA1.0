@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Statistics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { 
+            font-family: Arial; 
+            margin: 20px; 
+            background-color: #f8f9fa;
+        }
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .stat-card { 
+            margin: 20px 0; 
+            background: #fff; 
+            padding: 20px; 
+            border-radius: 10px; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .charts { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 30px; 
+        }
+        .chart-container { 
+            flex: 1; 
+            min-width: 400px; 
+            background: #fff; 
+            padding: 20px; 
+            border-radius: 10px; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        button.back-btn {
+            background-color: #6c757d;
+            border: none;
+            color: white;
+            padding: 8px 14px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button.back-btn:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <h1>📊 Admin Dashboard - Statistics</h1>
+        <button onclick="history.back()" class="back-btn">← Back</button>
+    </div>
+
+    <div class="stat-card">
+        <p><strong>Total Users:</strong> {{ user_count }}</p>
+        <p><strong>Total Chats:</strong> {{ chat_count }}</p>
+        <p><strong>Last Chat:</strong> {{ last_chat }}</p>
+    </div>
+
+    <div class="charts">
+        <div class="chart-container">
+            <h3>Chats Per Day</h3>
+            <canvas id="lineChart"></canvas>
+        </div>
+
+        <div class="chart-container">
+            <h3>Top 5 Active Users</h3>
+            <canvas id="pieChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Line chart
+        const lineCtx = document.getElementById('lineChart').getContext('2d');
+        const lineChart = new Chart(lineCtx, {
+            type: 'line',
+            data: {
+                labels: {{ chat_dates | tojson }},
+                datasets: [{
+                    label: 'Chats per Day',
+                    data: {{ chat_counts | tojson }},
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 2,
+                    tension: 0.3,
+                    fill: true
+                }]
+            }
+        });
+
+        // Pie chart
+        const pieCtx = document.getElementById('pieChart').getContext('2d');
+        const pieChart = new Chart(pieCtx, {
+            type: 'pie',
+            data: {
+                labels: {{ user_labels | tojson }},
+                datasets: [{
+                    label: 'Active Users',
+                    data: {{ user_chat_counts | tojson }},
+                    backgroundColor: [
+                        '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'
+                    ]
+                }]
+            }
+        });
+    </script>
+</body>
+</html>

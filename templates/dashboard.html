@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat - SkinCare Chatbot</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #111827;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+        .chat-container {
+            max-width: 800px;
+            height: 90vh;
+            margin: 40px auto;
+            background-color: #1f2937;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+        .chat-header {
+            padding: 20px;
+            border-bottom: 1px solid #374151;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chat-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-footer {
+            border-top: 1px solid #374151;
+            padding: 15px;
+        }
+        .bubble-wrapper {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        .user-bubble {
+            margin-left: auto;
+            background-color: #10b981;
+            color: #000;
+            padding: 12px 16px;
+            border-radius: 20px;
+            border-bottom-right-radius: 0;
+            max-width: 75%;
+        }
+        .bot-bubble {
+            margin-right: auto;
+            background-color: #374151;
+            color: #fff;
+            padding: 12px 16px;
+            border-radius: 20px;
+            border-bottom-left-radius: 0;
+            max-width: 75%;
+        }
+        .suggestion-btn {
+            background-color: #4b5563;
+            color: #fff;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 20px;
+            margin: 5px 5px 0 0;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+        .suggestion-btn:hover {
+            background-color: #6b7280;
+        }
+        .logout-btn {
+            background-color: #ef4444;
+            border: none;
+        }
+        .logout-btn:hover {
+            background-color: #dc2626;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <!-- Header -->
+        <div class="chat-header">
+            <h4>💬 Hello, {{ username }}</h4>
+            <div>
+                <a href="{{ url_for('history') }}" class="btn btn-outline-light btn-sm me-2">History</a>
+                <a href="{{ url_for('logout') }}" class="btn logout-btn btn-sm">Logout</a>
+            </div>
+        </div>
+
+        <!-- Chat Body -->
+        <div class="chat-body" id="chatBody">
+            <!-- Messages dynamically added here -->
+        </div>
+
+        <!-- Footer / Ask Form -->
+        <div class="chat-footer">
+            <form id="askForm" class="d-flex">
+                <input type="text" id="question" class="form-control me-2" placeholder="Ask something..." required>
+                <button type="submit" class="btn btn-success">Send</button>
+            </form>
+            <div id="suggestionBox" class="mt-2"></div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById("askForm");
+        const questionInput = document.getElementById("question");
+        const chatBody = document.getElementById("chatBody");
+        const suggestionBox = document.getElementById("suggestionBox");
+
+        form.addEventListener("submit", function(e) {
+            e.preventDefault();
+            const question = questionInput.value.trim();
+            if (question !== "") {
+                addMessage(question, "user");
+                fetchAndDisplayAnswer(question);
+                questionInput.value = "";
+            }
+        });
+
+        function addMessage(text, sender) {
+            const wrapper = document.createElement("div");
+            wrapper.className = "bubble-wrapper";
+
+            const bubble = document.createElement("div");
+            bubble.className = sender === "user" ? "user-bubble" : "bot-bubble";
+            bubble.innerText = text;
+
+            wrapper.appendChild(bubble);
+            chatBody.appendChild(wrapper);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        function fetchAndDisplayAnswer(question) {
+            fetch(`/ask?question=${encodeURIComponent(question)}`)
+                .then(res => res.json())
+                .then(data => {
+                    addMessage(data.answer, "bot");
+                    showSuggestions(data.related_questions);
+                });
+        }
+
+        function showSuggestions(questions) {
+            suggestionBox.innerHTML = "";
+            questions.forEach(q => {
+                const btn = document.createElement("button");
+                btn.className = "suggestion-btn";
+                btn.innerText = q;
+                btn.onclick = () => {
+                    questionInput.value = q;
+                    form.dispatchEvent(new Event("submit"));
+                };
+                suggestionBox.appendChild(btn);
+            });
+        }
+    </script>
+</body>
+</html>
