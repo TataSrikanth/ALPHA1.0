@@ -4,6 +4,8 @@ Welcome to the official repository of **SkinCare Chatbot**! 🚀 This project is
 
 🎥 **Watch the Project Demo Video**: [https://youtu.be/4MwdvFRCUos](https://youtu.be/4MwdvFRCUos)
 
+[![SkinCare Chatbot Demo](https://via.placeholder.com/1280x720.png?text=SkinCare+Chatbot+Demo)](https://youtu.be/4MwdvFRCUos)
+
 ---
 
 ## 🗂️ Features
@@ -89,7 +91,7 @@ Password: admin123
 
 ## 📸 Screenshots
 
-![Dashboard Preview](images\image.png)
+[![SkinCare Chatbot Demo](https://via.placeholder.com/1280x720.png?text=SkinCare+Chatbot+Demo)](https://youtu.be/4MwdvFRCUos)
 
 ---
 
@@ -115,7 +117,7 @@ Pull requests are welcome! Feel free to fork, modify, and contribute.
 
 ## 🔗 Connect with Me
 
-- 🌐 [LinkedIn](https://www.linkedin.com/in/jitesh-shelke-702745286/)
+- 🌐 [LinkedIn](https://linkedin.com/in/jitesh-shelke)
 - 💻 [GitHub](https://github.com/JiteshShelke)
 
 ⭐ **If you liked this project, don't forget to star the repo!** ⭐
