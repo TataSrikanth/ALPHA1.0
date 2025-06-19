@@ -86,13 +86,16 @@
 <body>
     <div class="chat-container">
         <!-- Header -->
-        <div class="chat-header">
-            <h4>💬 Hello, {{ username }}</h4>
-            <div>
-                <a href="{{ url_for('history') }}" class="btn btn-outline-light btn-sm me-2">History</a>
-                <a href="{{ url_for('logout') }}" class="btn logout-btn btn-sm">Logout</a>
-            </div>
-        </div>
+        <!-- Header -->
+<div class="chat-header">
+    <h4>💬 Hello, {{ username }}</h4>
+    <div>
+        <a href="{{ url_for('profile') }}" class="btn btn-outline-light btn-sm me-2">👤 Profile</a>
+        <a href="{{ url_for('history') }}" class="btn btn-outline-light btn-sm me-2">📜 History</a>
+        <a href="{{ url_for('logout') }}" class="btn logout-btn btn-sm">🚪 Logout</a>
+    </div>
+</div>
+
 
         <!-- Chat Body -->
         <div class="chat-body" id="chatBody">

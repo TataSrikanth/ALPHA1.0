@@ -10,13 +10,18 @@
             justify-content: space-between;
             align-items: center;
         }
+        .btn-back { background-color: #6c757d; border: none; color: white; padding: 8px 14px; border-radius: 5px; }
+        .btn-back:hover { background-color: #5a6268; }
+        .btn-back{
+          text-decoration:none
+        }
     </style>
 </head>
 <body class="bg-dark text-white p-4">
 
     <div class="top-bar mb-3">
         <h2>📚 Manage Q&A</h2>
-        <button onclick="history.back()" class="btn btn-secondary">← Back</button>
+        <a href="{{ url_for('admin_dashboard') }}" class="btn-back">← Back</a>
     </div>
 
     <form method="POST" class="row g-3 mt-3 mb-4">
@@ -40,7 +45,7 @@
                 <td>{{ row.question }}</td>
                 <td>{{ row.answer }}</td>
                 <td>
-                    <form method="POST" action="{{ url_for('delete_qa', index=loop.index0) }}">
+                    <form method="POST" action="{{ url_for('delete_qa', index=row.row_index) }}">
                         <button class="btn btn-danger btn-sm" onclick="return confirm('Delete this Q&A?')">Delete</button>
                     </form>
                 </td>

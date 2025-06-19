@@ -10,16 +10,18 @@ Welcome to the official repository of **SkinCare Chatbot**! 🚀 This project is
 
 ## 🗂️ Features
 
-- 🗨️ **Interactive Chatbot** for skincare questions 🧴
-- 🔒 **User Authentication**: Registration & Login
-- 📜 **Chat History** with Timestamps 📅
-- 🖥️ **Admin Dashboard** with:
-  - User Management ✅❌
-  - Chat Logs Export 📂
-  - Live Analytics 📊
-  - Add/Edit/Delete Q&A 📝
-- 🔎 **Semantic Search** with **Sentence Transformers**
-- 🌙 **Dark Mode** UI with Bootstrap 5
+- 💬 Smart Chatbot for skincare questions using semantic search
+- 👤 User Registration & Login
+- 🕘 Chat History with timestamp tracking
+- 🧑‍💼 Admin Panel with:
+  - User Management (Edit / Block / Unblock / Delete)
+  - View Individual User Chat History
+  - Export All Chats to CSV
+  - Add / Delete Q&A Entries
+  - Live User & Chat Analytics (Top Users + Daily Chats)
+- 🧠 Semantic Matching via Sentence Transformers
+- 🧽 Preprocessing using spaCy, NLTK, WordNet
+- 🌐 Clean Bootstrap 5 UI with optional Dark Mode
 
 ---
 

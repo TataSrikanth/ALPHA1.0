@@ -256,11 +256,15 @@ def manage_qa():
     if request.method == 'POST':
         question = request.form['question']
         answer = request.form['answer']
-        df.loc[len(df)] = [question, answer, question.lower().translate(str.maketrans("", "", string.punctuation))]
+        cleaned_q = question.lower().translate(str.maketrans("", "", string.punctuation))
+        df.loc[len(df)] = [question, answer, cleaned_q]
         df.to_csv("skin_problems_QA.csv", index=False)
         flash("New Q&A added successfully.")
 
-    return render_template('admin_qa.html', qa_list=df[["question", "answer"]].to_dict(orient="records"))
+    qa_records = df[["question", "answer"]].copy()
+    qa_records["row_index"] = df.index  # ✅ Include the real index
+    return render_template("admin_qa.html", qa_list=qa_records.to_dict(orient="records"))
+
 
 
 @app.route('/admin/delete_qa/<int:index>', methods=['POST'])
@@ -271,6 +275,7 @@ def delete_qa(index):
     df.to_csv("skin_problems_QA.csv", index=False)
     flash("Q&A deleted.")
     return redirect(url_for('manage_qa'))
+
 
 
 @app.route('/admin/export_chats')
@@ -369,6 +374,101 @@ def delete_user(user_id):
 
     flash("User and their history deleted successfully.")
     return redirect(url_for('admin_dashboard'))
+
+@app.route('/profile', methods=['GET', 'POST'])
+def profile():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    cursor.execute("SELECT * FROM users WHERE id=%s", (session['user_id'],))
+    user = cursor.fetchone()
+
+    if request.method == 'POST':
+        new_username = request.form['username']
+        new_email = request.form['email']
+        new_password = request.form['new_password']
+
+        if new_password:
+            hashed_password = generate_password_hash(new_password)
+            cursor.execute("UPDATE users SET username=%s, email=%s, password=%s WHERE id=%s",
+                           (new_username, new_email, hashed_password, session['user_id']))
+        else:
+            cursor.execute("UPDATE users SET username=%s, email=%s WHERE id=%s",
+                           (new_username, new_email, session['user_id']))
+        db.commit()
+        flash('Profile updated successfully.')
+        session['username'] = new_username
+        return redirect(url_for('profile'))
+
+    return render_template("profile.html", user=user)
+
+
+# ----------------- Manage User Routes (Separate for Clarity) -----------------
+
+@app.route('/admin/users')
+def user_management():
+    if 'admin' not in session:
+        return redirect(url_for('admin_login'))
+
+    cursor.execute("SELECT id, username, email, is_blocked FROM users")
+    users = cursor.fetchall()
+    return render_template("user.html", users=users)
+
+
+@app.route('/admin/users/edit/<int:user_id>', methods=['POST'])
+def user_edit(user_id):
+    if 'admin' not in session:
+        return redirect(url_for('admin_login'))
+
+    username = request.form['username']
+    email = request.form['email']
+    new_password = request.form['new_password']
+
+    if new_password:
+        hashed_password = generate_password_hash(new_password)
+        cursor.execute("UPDATE users SET username=%s, email=%s, password=%s WHERE id=%s",
+                       (username, email, hashed_password, user_id))
+    else:
+        cursor.execute("UPDATE users SET username=%s, email=%s WHERE id=%s",
+                       (username, email, user_id))
+    db.commit()
+    flash("User updated successfully.")
+    return redirect(url_for('user_management'))
+
+
+@app.route('/admin/users/block/<int:user_id>', methods=['POST'])
+def user_block(user_id):
+    if 'admin' not in session:
+        return redirect(url_for('admin_login'))
+    cursor.execute("UPDATE users SET is_blocked = 1 WHERE id=%s", (user_id,))
+    db.commit()
+    flash("User blocked.")
+    return redirect(url_for('user_management'))
+
+
+@app.route('/admin/users/unblock/<int:user_id>', methods=['POST'])
+def user_unblock(user_id):
+    if 'admin' not in session:
+        return redirect(url_for('admin_login'))
+    cursor.execute("UPDATE users SET is_blocked = 0 WHERE id=%s", (user_id,))
+    db.commit()
+    flash("User unblocked.")
+    return redirect(url_for('user_management'))
+
+
+@app.route('/admin/users/delete/<int:user_id>', methods=['POST'])
+def user_delete(user_id):
+    if 'admin' not in session:
+        return redirect(url_for('admin_login'))
+
+    cursor.execute("DELETE FROM chat_history WHERE user_id=%s", (user_id,))
+    cursor.execute("DELETE FROM users WHERE id=%s", (user_id,))
+    db.commit()
+    flash("User and history deleted.")
+    return redirect(url_for('user_management'))
+
+
+
 
 
 # ---------------- Run App ----------------

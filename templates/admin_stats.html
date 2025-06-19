@@ -35,16 +35,10 @@
             border-radius: 10px; 
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-        button.back-btn {
-            background-color: #6c757d;
-            border: none;
-            color: white;
-            padding: 8px 14px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button.back-btn:hover {
-            background-color: #5a6268;
+        .btn-back { background-color: #6c757d; border: none; color: white; padding: 8px 14px; border-radius: 5px; }
+        .btn-back:hover { background-color: #5a6268; }
+        .btn-back{
+          text-decoration:none
         }
     </style>
 </head>
@@ -52,7 +46,7 @@
 
     <div class="top-bar">
         <h1>📊 Admin Dashboard - Statistics</h1>
-        <button onclick="history.back()" class="back-btn">← Back</button>
+        <a href="{{ url_for('admin_dashboard') }}" class="btn-back">← Back</a>
     </div>
 
     <div class="stat-card">
