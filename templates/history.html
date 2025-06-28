@@ -6,58 +6,73 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
         body {
-            background-color: #111827;
-            color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #141414;
+            color: #fff;
+            font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+            margin: 0;
+            min-height: 100vh;
+        }
+        .netflix-header {
+            background: #141414;
+            color: #e50914;
+            padding: 18px 40px;
+            font-size: 2rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            border-bottom: 4px solid #e50914;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.7);
         }
         .history-box {
-            background-color: #1f2937;
+            background-color: #181818;
             padding: 40px;
             border-radius: 15px;
             margin-top: 80px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            box-shadow: 0 0 20px rgba(0,0,0,0.7);
         }
         .table {
-            color: #d1d5db;
+            color: #fff;
+            background: #222;
+            border-radius: 8px;
+            overflow: hidden;
         }
-        .logout-btn {
-            background-color: #ef4444;
+        .table th, .table td {
+            background: #222;
+            color: #fff;
+            border-color: #333;
+        }
+        .table th {
+            color: #e50914;
+            font-weight: bold;
+        }
+        .logout-btn, .back-btn {
+            background-color: #e50914;
             border: none;
-        }
-        .logout-btn:hover {
-            background-color: #dc2626;
-        }
-        .back-btn {
-            background-color: #6c757d;
-            border: none;
-            color: white;
+            color: #fff;
+            font-weight: 600;
+            border-radius: 4px;
             margin-right: 10px;
+            transition: background 0.2s;
         }
-        .back-btn:hover {
-            background-color: #5a6268;
+        .logout-btn:hover, .back-btn:hover {
+            background-color: #b0060f;
         }
     </style>
 </head>
 <body>
     <div class="container mt-4">
-        <div class="d-flex justify-content-between align-items-center">
-            <h2>📜 Chat History</h2>
-            <div>
-                <button onclick="history.back()" class="btn back-btn">← Back</button>
-                <a href="{{ url_for('logout') }}" class="btn logout-btn">Logout</a>
+        <div class="history-box">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2>Chat History</h2>
+                <div>
+                    <button onclick="history.back()" class="btn back-btn">Back</button>
+                    <a href="{{ url_for('logout') }}" class="btn logout-btn">Logout</a>
+                </div>
             </div>
-        </div>
-
-        <div class="history-box mt-4">
-            {% if chats %}
-            <table class="table table-striped table-dark table-bordered">
-                <thead>
-                    <tr>
-                        <th>Question</th>
-                        <th>Answer</th>
-                        <th>Timestamp</th>
-                    </tr>
-                </thead>
+            <table class="table mt-4">
+                <thead><tr><th>Question</th><th>Answer</th><th>Timestamp</th></tr></thead>
                 <tbody>
                     {% for chat in chats %}
                     <tr>
@@ -68,9 +83,6 @@
                     {% endfor %}
                 </tbody>
             </table>
-            {% else %}
-            <p>No chat history found.</p>
-            {% endif %}
         </div>
     </div>
 </body>

@@ -2,34 +2,73 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>SkinCare Chatbot</title>
+    <title>Alpha</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
     <!-- ✅ Correct and updated Font Awesome CDN -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <style>
         body {
-            background-color: #111827;
-            color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #141414;
+            color: #fff;
+            font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+            margin: 0;
+            min-height: 100vh;
+        }
+        .netflix-header {
+            background: #141414;
+            color: #e50914;
+            padding: 18px 40px;
+            font-size: 2rem;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            border-bottom: 4px solid #e50914;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.7);
         }
         .container-box {
-            background-color: #1f2937;
+            background-color: #181818;
             border-radius: 15px;
             padding: 40px;
             margin-top: 100px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            box-shadow: 0 0 20px rgba(0,0,0,0.7);
             text-align: center;
         }
         .btn-custom {
-            background-color: #10b981;
+            background-color: #e50914;
             border: none;
+            color: #fff;
+            font-weight: 600;
+            border-radius: 4px;
+            transition: background 0.2s;
         }
         .btn-custom:hover {
-            background-color: #059669;
+            background-color: #b0060f;
+        }
+        .btn-outline-light {
+            border-color: #e50914;
+            color: #e50914;
         }
         .btn-outline-light:hover {
-            background-color: #4b5563;
+            background: #e50914;
+            color: #fff;
+        }
+        .btn-danger {
+            background-color: #e50914;
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        .btn-danger:hover {
+            background-color: #b0060f;
+        }
+        hr.text-secondary {
+            border-color: #333 !important;
         }
         footer {
             margin-top: 80px;
@@ -37,36 +76,36 @@
         footer a:hover {
             color: #10b981 !important;
         }
+        .alpha-icon {
+            font-size: 44px;
+            color: #fff;
+            font-family: 'Segoe UI', sans-serif;
+            font-weight: normal;
+            margin: -40px 0 10px 0;
+            transform: scaleX(1.7);
+        }
     </style>
 </head>
 <body>
-    <div class="container d-flex justify-content-center">
-        <div class="container-box">
-            <h1 class="mb-4">🧴 SkinCare Chatbot</h1>
-            <p class="mb-4">Ask skin-related questions and get instant AI-powered answers!</p>
-
-            <div class="d-grid gap-3 col-6 mx-auto">
-                <a href="{{ url_for('login') }}" class="btn btn-custom btn-lg">User Login</a>
-                <a href="{{ url_for('register') }}" class="btn btn-outline-light btn-lg">User Register</a>
-                <hr class="text-secondary">
-                <a href="{{ url_for('admin_login') }}" class="btn btn-danger btn-lg">Admin Login</a>
-            </div>
+    <!-- Top bar: Logo left, buttons right -->
+    <div style="width: 100vw; display: flex; justify-content: space-between; align-items: flex-start; padding: 32px 48px 0 48px; position: absolute; top: 0; left: 0; z-index: 10;">
+        <div style="display: flex; flex-direction: column; align-items: center; margin-left: 40px;">
+            <span style="font-size: 3.2rem; font-family: 'Oswald', 'Bebas Neue', 'Segoe UI', 'Roboto', 'Arial', sans-serif; font-weight: 500; color: #e50914; letter-spacing: 1.5px; text-transform: uppercase;">ALPHA</span>
+            <div class="alpha-icon">α</div>
+        </div>
+        <div style="display: flex; gap: 12px; position: absolute; right: 48px; top: 35px;">
+            <a href="{{ url_for('login') }}" style="background: #e50914; color: #fff; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: 700 !important; border-radius: 4px; padding: 8px 22px; margin-right: 12px; text-decoration: none; font-size: 0.92rem; transition: background 0.2s; border: none;">Sign In</a>
+            <a href="{{ url_for('admin_login') }}" style="background: #e50914; color: #fff; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: 700 !important; border-radius: 4px; padding: 8px 22px; text-decoration: none; font-size: 0.92rem; transition: background 0.2s; border: none;">Admin Login</a>
         </div>
     </div>
-
-    <!-- Footer -->
-<footer class="text-center mt-5">
-    <p class="text-white">Created by Jitesh Shelke</p>
-    <div class="d-flex justify-content-center gap-3">
-        <a href="https://github.com/JiteshShelke" target="_blank" class="text-white fs-4">
-            <i class="fab fa-github"></i>
-        </a>
-        <a href="https://www.linkedin.com/in/jitesh-shelke-702745286/" target="_blank" class="text-white fs-4">
-            <i class="fab fa-linkedin"></i>
-        </a>
+    <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+        <div class="container-box" style="margin-top:260px; background: none; box-shadow: none; padding: 0; text-align: center;">
+            <div style="font-size:2.8rem; font-weight:700; margin-bottom: 10px;">Introducing Alpha</div>
+            <h1 class="mb-4" style="font-size:1.1rem; font-weight:700; letter-spacing:1px; margin-top: 28px; margin-bottom: 2px;">Ask any questions and get instant AI-powered answers!</h1>
+            <a href="{{ url_for('register') }}" style="display: inline-block; background: #e50914; color: #fff; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: 700 !important; border-radius: 4px; padding: 16px 40px; font-size: 1.5rem; text-decoration: none; margin-top: 4px; transition: background 0.2s; border: none; letter-spacing: 1px;">
+                Get Started <span style="font-size:1.5rem; vertical-align:baseline; margin-left:4px;">&gt;</span>
+            </a>
+        </div>
     </div>
-</footer>
-
-
 </body>
 </html>

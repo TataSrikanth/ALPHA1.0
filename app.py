@@ -1,83 +1,23 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 import mysql.connector
 from werkzeug.security import generate_password_hash, check_password_hash
-import pandas as pd
-import nltk
-import spacy
-import string
-from nltk.corpus import wordnet
-from sentence_transformers import SentenceTransformer, util
-from werkzeug.security import generate_password_hash
-print(generate_password_hash("admin123"))
-
+import google.generativeai as genai
+import random
+import smtplib
+from email.mime.text import MIMEText
 
 # ---------------- Flask App Setup ----------------
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Replace with a strong secret key
+app.secret_key = '7393288429b093121d51c001a9bfc9778094f31a2eaedd4951d6f01287403cca'  # Replace with a strong secret key
 
 # ---------------- Database Connection ----------------
 db = mysql.connector.connect(
     host="localhost",
     user="root",
-    password="",
-    database="chatbot_db"
+    password="root",
+    database="skincare"
 )
 cursor = db.cursor(dictionary=True)
-
-# ---------------- NLP & Dataset Setup ----------------
-nltk.download("punkt")
-nltk.download("wordnet")
-nlp = spacy.load("en_core_web_sm")
-
-df = pd.read_csv("skin_problems_QA.csv")
-df.columns = ["question", "answer", "cleaned_question"]
-df.dropna(inplace=True)
-df["cleaned_question"] = df["question"].apply(lambda text: text.lower().strip().translate(str.maketrans("", "", string.punctuation)))
-
-model = SentenceTransformer("all-MiniLM-L6-v2")
-question_embeddings = model.encode(df["cleaned_question"].tolist(), convert_to_tensor=True)
-
-def extract_skin_terms(text):
-    doc = nlp(text)
-    return [ent.text.lower() for ent in doc.ents]
-
-def get_synonyms(word):
-    synonyms = set()
-    for syn in wordnet.synsets(word):
-        for lemma in syn.lemmas():
-            synonyms.add(lemma.name().lower().replace("_", " "))
-    return list(synonyms)
-
-def get_answer(user_question):
-    user_question = user_question.lower().strip().translate(str.maketrans("", "", string.punctuation))
-    extracted_terms = extract_skin_terms(user_question)
-    expanded_question = user_question
-    if extracted_terms:
-        for term in extracted_terms:
-            synonyms = get_synonyms(term)
-            if synonyms:
-                expanded_question += " " + " ".join(synonyms)
-
-    user_embedding = model.encode(expanded_question, convert_to_tensor=True)
-    similarities = util.pytorch_cos_sim(user_embedding, question_embeddings)[0]
-    best_match_index = similarities.argmax().item()
-    confidence_score = similarities[best_match_index].item()
-
-    if confidence_score < 0.5:
-        return {
-            "answer": "I'm not sure about that. Could you provide more details or consult a dermatologist?",
-            "related_questions": []
-        }
-
-    best_answer = df.iloc[best_match_index]["answer"]
-    related_indices = similarities.argsort(descending=True)[1:4].tolist()
-    related_questions = [
-        df.iloc[int(i)]["question"] for i in related_indices if similarities[i] > 0.5
-    ]
-    return {
-        "answer": best_answer,
-        "related_questions": related_questions
-    }
 
 # ---------------- Routes ----------------
 
@@ -90,15 +30,68 @@ def register():
     if request.method == 'POST':
         username = request.form['username']
         email = request.form['email']
-        password = generate_password_hash(request.form['password'])
-        try:
-            cursor.execute("INSERT INTO users (username, email, password) VALUES (%s, %s, %s)", (username, email, password))
-            db.commit()
-            flash('Registration successful! Please log in.')
-            return redirect(url_for('login'))
-        except mysql.connector.Error as err:
-            flash(f"Error: {err}")
+        password = request.form['password']
+        confirm_password = request.form['confirm_password']
+        if password != confirm_password:
+            flash('Passwords do not match!')
+            return render_template('register.html')
+        password_hash = generate_password_hash(password)
+        # Check if email already exists
+        cursor.execute("SELECT id FROM users WHERE email=%s", (email,))
+        if cursor.fetchone():
+            flash('Email already exists. Please use a different email.')
+            return render_template('register.html')
+        otp = str(random.randint(100000, 999999))
+        session['pending_user'] = {
+            'username': username,
+            'email': email,
+            'password': password_hash,
+            'otp': otp
+        }
+        # Send OTP to email
+        send_otp_email(email, otp)
+        return redirect(url_for('verify_otp'))
     return render_template('register.html')
+
+@app.route('/verify_otp', methods=['GET', 'POST'])
+def verify_otp():
+    if 'pending_user' not in session:
+        return redirect(url_for('register'))
+    if request.method == 'POST':
+        user_otp = request.form['otp']
+        if user_otp == session['pending_user']['otp']:
+            try:
+                cursor.execute("INSERT INTO users (username, email, password) VALUES (%s, %s, %s)",
+                               (session['pending_user']['username'], session['pending_user']['email'], session['pending_user']['password']))
+                db.commit()
+                session.pop('pending_user')
+                flash('OTP verified successfully!', 'otp_success')
+                flash('Registration successful! Please log in.')
+                return redirect(url_for('login'))
+            except mysql.connector.Error as err:
+                flash(f"Error: {err}")
+        else:
+            flash('Invalid OTP. Please try again.')
+    return render_template('verify_otp.html')
+
+def send_otp_email(email, otp):
+    # Configure your SMTP server here
+    smtp_server = 'smtp.gmail.com'
+    smtp_port = 587
+    smtp_user = 'srikanthtata2002@gmail.com'
+    smtp_password = 'tqaacewtexhqihel'
+    msg = MIMEText(f'Your OTP for registration is: {otp}')
+    msg['Subject'] = 'Your Registration OTP'
+    msg['From'] = smtp_user
+    msg['To'] = email
+    try:
+        server = smtplib.SMTP(smtp_server, smtp_port)
+        server.starttls()
+        server.login(smtp_user, smtp_password)
+        server.sendmail(smtp_user, [email], msg.as_string())
+        server.quit()
+    except Exception as e:
+        print('Failed to send OTP email:', e)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -121,21 +114,30 @@ def user_dashboard():
         return redirect(url_for('login'))
     return render_template('dashboard.html', username=session['username'])
 
-@app.route('/ask', methods=['GET'])
-def ask():
+@app.route('/ask_anything', methods=['GET'])
+def ask_anything():
     if 'user_id' not in session:
-        return jsonify({"answer": "Please log in first!", "related_questions": []})
+        return jsonify({'answer': 'Please log in first!'}), 401
+    question = request.args.get('question', '')
+    if not question:
+        return jsonify({'answer': 'Please enter a valid question!'}), 400
 
-    user_question = request.args.get("question", "")
-    if not user_question:
-        return jsonify({"answer": "Please enter a valid question!", "related_questions": []})
+    genai.configure(api_key="AIzaSyCmw_aUKU8FWhibBHoqVUQ5e-V0w_obshA")  # <-- Replace with your actual API key
+    try:
+        model = genai.GenerativeModel('gemini-1.5-flash')  # or 'gemini-pro'
+        response = model.generate_content(question)
+        answer = response.text
+    except Exception as e:
+        answer = f"Error: {str(e)}"
 
-    result = get_answer(user_question)
-
-    cursor.execute("INSERT INTO chat_history (user_id, question, answer) VALUES (%s, %s, %s)",
-                   (session['user_id'], user_question, result['answer']))
+    # Save chat to history
+    cursor.execute(
+        "INSERT INTO chat_history (user_id, question, answer) VALUES (%s, %s, %s)",
+        (session['user_id'], question, answer)
+    )
     db.commit()
-    return jsonify(result)
+
+    return jsonify({'answer': answer})
 
 @app.route('/history')
 def history():
@@ -151,9 +153,6 @@ def logout():
     return redirect(url_for('landing'))
 
 # ---------------- Admin Routes ----------------
-
-# ---------------- Admin Routes ----------------
-
 from flask import send_file
 import io
 import csv
@@ -173,7 +172,6 @@ def admin_login():
         else:
             flash("Invalid admin credentials.")
     return render_template('admin_login.html')
-
 
 @app.route('/admin/dashboard')
 def admin_dashboard():
@@ -202,7 +200,6 @@ def admin_dashboard():
         total_pages=total_pages,
         current_page=current_page
     )
-
 
 @app.route('/admin/block_user/<int:user_id>', methods=['POST'])
 def block_user(user_id):
@@ -244,39 +241,6 @@ def edit_user(user_id):
     cursor.execute("SELECT * FROM users WHERE id = %s", (user_id,))
     user = cursor.fetchone()
     return render_template('edit_user.html', user=user)
-
-
-
-
-@app.route('/admin/qa', methods=['GET', 'POST'])
-def manage_qa():
-    if 'admin' not in session:
-        return redirect(url_for('admin_login'))
-
-    if request.method == 'POST':
-        question = request.form['question']
-        answer = request.form['answer']
-        cleaned_q = question.lower().translate(str.maketrans("", "", string.punctuation))
-        df.loc[len(df)] = [question, answer, cleaned_q]
-        df.to_csv("skin_problems_QA.csv", index=False)
-        flash("New Q&A added successfully.")
-
-    qa_records = df[["question", "answer"]].copy()
-    qa_records["row_index"] = df.index  # ✅ Include the real index
-    return render_template("admin_qa.html", qa_list=qa_records.to_dict(orient="records"))
-
-
-
-@app.route('/admin/delete_qa/<int:index>', methods=['POST'])
-def delete_qa(index):
-    if 'admin' not in session:
-        return redirect(url_for('admin_login'))
-    df.drop(index, inplace=True)
-    df.to_csv("skin_problems_QA.csv", index=False)
-    flash("Q&A deleted.")
-    return redirect(url_for('manage_qa'))
-
-
 
 @app.route('/admin/export_chats')
 def export_chats():
@@ -346,9 +310,6 @@ def admin_stats():
         user_chat_counts=user_chat_counts
     )
 
-
-
-
 @app.route('/admin/user/<int:user_id>/history')
 def admin_user_history(user_id):
     if 'admin' not in session:
@@ -361,7 +322,6 @@ def admin_user_history(user_id):
     chats = cursor.fetchall()
 
     return render_template("admin_user_history.html", username=user['username'], chats=chats)
-
 
 @app.route('/admin/delete_user/<int:user_id>', methods=['POST'])
 def delete_user(user_id):
@@ -402,7 +362,6 @@ def profile():
 
     return render_template("profile.html", user=user)
 
-
 # ----------------- Manage User Routes (Separate for Clarity) -----------------
 
 @app.route('/admin/users')
@@ -413,7 +372,6 @@ def user_management():
     cursor.execute("SELECT id, username, email, is_blocked FROM users")
     users = cursor.fetchall()
     return render_template("user.html", users=users)
-
 
 @app.route('/admin/users/edit/<int:user_id>', methods=['POST'])
 def user_edit(user_id):
@@ -435,7 +393,6 @@ def user_edit(user_id):
     flash("User updated successfully.")
     return redirect(url_for('user_management'))
 
-
 @app.route('/admin/users/block/<int:user_id>', methods=['POST'])
 def user_block(user_id):
     if 'admin' not in session:
@@ -445,7 +402,6 @@ def user_block(user_id):
     flash("User blocked.")
     return redirect(url_for('user_management'))
 
-
 @app.route('/admin/users/unblock/<int:user_id>', methods=['POST'])
 def user_unblock(user_id):
     if 'admin' not in session:
@@ -454,7 +410,6 @@ def user_unblock(user_id):
     db.commit()
     flash("User unblocked.")
     return redirect(url_for('user_management'))
-
 
 @app.route('/admin/users/delete/<int:user_id>', methods=['POST'])
 def user_delete(user_id):
@@ -466,10 +421,6 @@ def user_delete(user_id):
     db.commit()
     flash("User and history deleted.")
     return redirect(url_for('user_management'))
-
-
-
-
 
 # ---------------- Run App ----------------
 

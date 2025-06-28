@@ -2,38 +2,88 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>User Registration - SkinCare Chatbot</title>
+    <title>sign Up</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
         body {
-            background-color: #111827;
-            color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #141414;
+            color: #fff;
+            font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+            margin: 0;
+            min-height: 100vh;
+        }
+        .netflix-header {
+            background: #141414;
+            color: #e50914;
+            padding: 18px 40px;
+            font-size: 2rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            border-bottom: 4px solid #e50914;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.7);
         }
         .form-box {
-            background-color: #1f2937;
+            background-color: #181818;
             padding: 40px;
             border-radius: 15px;
             margin-top: 80px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.4);
+            box-shadow: 0 0 20px rgba(0,0,0,0.7);
         }
         .btn-custom {
-            background-color: #10b981;
+            background-color: #e50914;
             border: none;
+            color: #fff;
+            font-weight: 600;
+            border-radius: 4px;
+            transition: background 0.2s;
         }
         .btn-custom:hover {
-            background-color: #059669;
+            background-color: #b0060f;
+        }
+        .btn-outline-light {
+            border-color: #e50914;
+            color: #e50914;
+        }
+        .btn-outline-light:hover {
+            background: #e50914;
+            color: #fff;
         }
         label {
             color: #d1d5db;
+        }
+        .form-control {
+            background: #222;
+            color: #fff;
+            border: 1px solid #333;
+        }
+        .form-control:focus {
+            background: #222;
+            color: #fff;
+            border: 1.5px solid #e50914;
+            box-shadow: none;
+        }
+        .alert-info, .alert-danger {
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
     <div class="container d-flex justify-content-center">
         <div class="form-box col-md-6">
-            <h2 class="mb-4 text-center">📝 User Registration</h2>
-            <form method="POST">
+            <h2 class="mb-4 text-center"> Sign Up </h2>
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                <div class="alert alert-danger mt-2">
+                  {% for message in messages %}
+                    <div>{{ message }}</div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% endwith %}
+            <form method="POST" onsubmit="return checkPasswordsMatch()">
                 <div class="mb-3">
                     <label for="username" class="form-label">Username:</label>
                     <input type="text" class="form-control" name="username" required>
@@ -44,21 +94,34 @@
                 </div>
                 <div class="mb-4">
                     <label for="password" class="form-label">Password:</label>
-                    <input type="password" class="form-control" name="password" required>
+                    <input type="password" class="form-control" name="password" id="password" required>
+                </div>
+                <div class="mb-4">
+                    <label for="confirm_password" class="form-label">Confirm Password:</label>
+                    <input type="password" class="form-control" name="confirm_password" id="confirm_password" required>
                 </div>
                 <div class="d-grid">
                     <button type="submit" class="btn btn-custom btn-lg">Register</button>
                 </div>
             </form>
             <p class="text-center mt-3">Already have an account? 
-                <a href="{{ url_for('login') }}" class="text-success">Login here</a>
+                <a href="{{ url_for('login') }}" class="text-success">Sign In</a>
             </p>
-
-            <!-- ✅ Back to Home Button -->
             <div class="text-center mt-4">
-                <a href="{{ url_for('landing') }}" class="btn btn-outline-light">🏠 Back to Home</a>
+                <a href="{{ url_for('landing') }}" class="btn btn-outline-light">Back to Home</a>
             </div>
         </div>
     </div>
+    <script>
+    function checkPasswordsMatch() {
+        var password = document.getElementById('password').value;
+        var confirmPassword = document.getElementById('confirm_password').value;
+        if (password !== confirmPassword) {
+            alert('Passwords do not match!');
+            return false;
+        }
+        return true;
+    }
+    </script>
 </body>
 </html>

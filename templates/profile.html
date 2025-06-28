@@ -2,47 +2,107 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>👤 Profile</title>
+    <title>Profile</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #141414;
+            color: #fff;
+            font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+            margin: 0;
+            min-height: 100vh;
+        }
+        .netflix-header {
+            background: #141414;
+            color: #e50914;
+            padding: 18px 40px;
+            font-size: 2rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            border-bottom: 4px solid #e50914;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.7);
+        }
+        .profile-box {
+            background-color: #181818;
+            padding: 40px;
+            border-radius: 15px;
+            margin-top: 80px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.7);
+        }
+        .btn-success {
+            background-color: #e50914;
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        .btn-success:hover {
+            background-color: #b0060f;
+        }
+        .btn-light {
+            border-color: #e50914;
+            color: #e50914;
+        }
+        .btn-light:hover {
+            background: #e50914;
+            color: #fff;
+        }
+        label {
+            color: #d1d5db;
+        }
+        .form-control {
+            background: #222;
+            color: #fff;
+            border: 1px solid #333;
+        }
+        .form-control:focus {
+            background: #222;
+            color: #fff;
+            border: 1.5px solid #e50914;
+            box-shadow: none;
+        }
+        .alert-success {
+            border-radius: 4px;
+        }
+    </style>
 </head>
-<body class="bg-dark text-white p-4">
+<body>
     <div class="container">
-        <h2>👤 Your Profile</h2>
-        <a href="{{ url_for('user_dashboard') }}" class="btn btn-light btn-sm mb-3">← Back to Dashboard</a>
-
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <div class="alert alert-success">
-                    {{ messages[0] }}
+        <div class="profile-box">
+            <h2>Your Profile</h2>
+            <a href="{{ url_for('user_dashboard') }}" class="btn btn-light btn-sm mb-3">Back to Dashboard</a>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="alert alert-success">
+                        {{ messages[0] }}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            <form method="POST" class="bg-secondary p-4 rounded shadow" onsubmit="return confirmUpdate()" style="background: #222 !important; color: #fff;">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}" required>
                 </div>
-            {% endif %}
-        {% endwith %}
-
-        <form method="POST" class="bg-secondary p-4 rounded shadow" onsubmit="return confirmUpdate()">
-
-            <div class="mb-3">
-                <label for="username" class="form-label">👤 Username</label>
-                <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}" required>
-            </div>
-
-            <div class="mb-3">
-                <label for="email" class="form-label">📧 Email</label>
-                <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required>
-            </div>
-
-            <div class="mb-3">
-                <label for="new_password" class="form-label">🔒 New Password</label>
-                <input type="password" class="form-control" id="new_password" name="new_password" placeholder="Leave blank to keep current password">
-            </div>
-
-            <button type="submit" class="btn btn-success">💾 Save Changes</button>
-        </form>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="new_password" class="form-label">New Password</label>
+                    <input type="password" class="form-control" id="new_password" name="new_password" placeholder="Leave blank to keep current password">
+                </div>
+                <button type="submit" class="btn btn-success">Save Changes</button>
+            </form>
+        </div>
     </div>
     <script>
-function confirmUpdate() {
-    return confirm("Are you sure you want to save the changes?");
-}
-</script>
-
+    function confirmUpdate() {
+        return confirm("Are you sure you want to save the changes?");
+    }
+    </script>
 </body>
 </html>

@@ -2,122 +2,230 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Chat - SkinCare Chatbot</title>
+    <title>Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background-color: #111827;
-            color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow: hidden;
+            background-color: #141414;
+            color: #fff;
+            font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+            margin: 0;
+            min-height: 100vh;
         }
-        .chat-container {
-            max-width: 800px;
-            height: 90vh;
-            margin: 40px auto;
-            background-color: #1f2937;
-            border-radius: 15px;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-        }
-        .chat-header {
-            padding: 20px;
-            border-bottom: 1px solid #374151;
+        .netflix-header {
+            background: #141414;
+            color: #e50914;
+            padding: 18px 40px 18px 40px;
+            font-size: 2rem;
+            font-weight: bold;
+            letter-spacing: 2px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
+        .netflix-header .nav-btns a {
+            color: #fff;
+            background: #e50914;
+            border: none;
+            margin-left: 10px;
+            padding: 7px 18px;
+            border-radius: 4px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        .netflix-header .nav-btns a:hover {
+            background: #b0060f;
+            color: #fff;
+        }
+        .chat-container {
+            max-width: 800px;
+            height: 80vh;
+            margin: 40px auto;
+            background-color: #181818;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 20px rgba(0,0,0,0.7);
+        }
+        .chat-header {
+            display: none;
+        }
         .chat-body {
             flex: 1;
             overflow-y: auto;
-            padding: 20px;
+            padding: 30px 30px 20px 30px;
             display: flex;
             flex-direction: column;
         }
         .chat-footer {
-            border-top: 1px solid #374151;
-            padding: 15px;
+            border-top: 2px solid #222;
+            padding: 18px 30px;
+            background: #181818;
         }
         .bubble-wrapper {
             display: flex;
-            margin-bottom: 10px;
+            margin-bottom: 14px;
         }
         .user-bubble {
             margin-left: auto;
-            background-color: #10b981;
-            color: #000;
-            padding: 12px 16px;
+            background-color: #e50914;
+            color: #fff;
+            padding: 14px 20px;
             border-radius: 20px;
             border-bottom-right-radius: 0;
             max-width: 75%;
+            font-weight: 500;
+            font-size: 1.05rem;
+            box-shadow: 0 2px 8px rgba(229,9,20,0.15);
         }
         .bot-bubble {
             margin-right: auto;
-            background-color: #374151;
+            background-color: #333;
             color: #fff;
-            padding: 12px 16px;
+            padding: 14px 20px;
             border-radius: 20px;
             border-bottom-left-radius: 0;
             max-width: 75%;
+            font-size: 1.05rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
         .suggestion-btn {
-            background-color: #4b5563;
+            background-color: #222;
             color: #fff;
             border: none;
-            padding: 5px 12px;
+            padding: 7px 18px;
             border-radius: 20px;
             margin: 5px 5px 0 0;
-            font-size: 0.85rem;
+            font-size: 0.95rem;
             cursor: pointer;
+            font-weight: 500;
         }
         .suggestion-btn:hover {
-            background-color: #6b7280;
+            background-color: #e50914;
+            color: #fff;
         }
-        .logout-btn {
-            background-color: #ef4444;
+        .btn-send {
+            background: #e50914;
+            color: #fff;
             border: none;
+            font-weight: 600;
+            padding: 0 28px;
+            border-radius: 4px;
+            transition: background 0.2s;
         }
-        .logout-btn:hover {
-            background-color: #dc2626;
+        .btn-send:hover {
+            background: #b0060f;
+        }
+        .form-control {
+            background: #222;
+            color: #fff;
+            border: 1px solid #333;
+        }
+        .form-control:focus {
+            background: #222;
+            color: #fff;
+            border: 1.5px solid #e50914;
+            box-shadow: none;
+        }
+        .profile-icon {
+            width: 48px;
+            height: 48px;
+            background-color: #e50914;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: box-shadow 0.2s;
+        }
+        .profile-icon svg {
+            width: 60%;
+            height: 60%;
+            fill: #000;
+        }
+        .history-icon {
+            width: 48px;
+            height: 48px;
+            background-color: #e50914;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: box-shadow 0.2s;
+        }
+        .history-icon svg {
+            width: 60%;
+            height: 60%;
+            fill: #000;
+        }
+        .logout-icon {
+            width: 48px;
+            height: 48px;
+            background-color: #e50914;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: box-shadow 0.2s;
+        }
+        .logout-icon svg {
+            width: 60%;
+            height: 60%;
+            fill: #000;
+        }
+        .nav-logout {
+            position: fixed;
+            left: 48px;
+            bottom: 32px;
+            z-index: 20;
         }
     </style>
 </head>
 <body>
-    <div class="chat-container">
-        <!-- Header -->
-        <!-- Header -->
-<div class="chat-header">
-    <h4>💬 Hello, {{ username }}</h4>
-    <div>
-        <a href="{{ url_for('profile') }}" class="btn btn-outline-light btn-sm me-2">👤 Profile</a>
-        <a href="{{ url_for('history') }}" class="btn btn-outline-light btn-sm me-2">📜 History</a>
-        <a href="{{ url_for('logout') }}" class="btn logout-btn btn-sm">🚪 Logout</a>
+    <div class="netflix-header">
+        <div class="nav-icons" style="display: flex; flex-direction: column; align-items: flex-start; position: absolute; top: 32px; left: 48px; z-index: 20; gap: 18px;">
+            <a href="{{ url_for('profile') }}" title="Profile" style="text-decoration: none; margin-bottom: 0; padding: 0;">
+                <div class="profile-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                    <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm89.6 32h-11.7c-22.2 10.3-46.9 16-73.9 16s-51.7-5.7-73.9-16h-11.7C63.6 288 0 351.6 0 432v32c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-32c0-80.4-63.6-144-134.4-144z"/>
+                  </svg>
+                </div>
+            </a>
+            <a href="{{ url_for('history') }}" title="History" style="text-decoration: none;">
+                <div class="history-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                    <path d="M256 8C119 8 8 119 8 256H0c0 13.3 10.7 24 24 24h112c13.3 0 24-10.7 24-24V168c0-13.3-10.7-24-24-24s-24 10.7-24 24v49.6C139.5 145.1 190.9 104 256 104c84.1 0 152 68 152 152s-67.9 152-152 152c-65.1 0-116.5-41.1-135.4-113.6-3.2-13-16.4-20.9-29.5-17.7s-20.9 16.4-17.7 29.5C96.3 409.7 169.2 472 256 472c119.1 0 216-96.9 216-216S375.1 8 256 8zm16 120c-8.8 0-16 7.2-16 16v88c0 8.8 7.2 16 16 16h72c8.8 0 16-7.2 16-16s-7.2-16-16-16h-56v-72c0-8.8-7.2-16-16-16z"/>
+                  </svg>
+                </div>
+            </a>
+        </div>
+        <div class="nav-logout" style="position: fixed; left: 48px; bottom: 32px; z-index: 20;">
+            <a href="{{ url_for('logout') }}" title="Logout" style="text-decoration: none;">
+                <div class="logout-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                    <path d="M502.6 273.4c12.5-12.5 12.5-32.8 0-45.3l-96-96c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 224H192c-17.7 0-32 14.3-32 32s14.3 32 32 32h210.7l-41.4 41.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l96-96zM160 64C160 46.3 174.3 32 192 32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H192C119.2-32 64 23.2 64 96v320c0 72.8 55.2 128 128 128h96c17.7 0 32-14.3 32-32s-14.3-32-32-32h-96c-17.7 0-32-14.3-32-32V64z"/>
+                  </svg>
+                </div>
+            </a>
+        </div>
     </div>
-</div>
-
-
-        <!-- Chat Body -->
+    <div class="chat-container">
         <div class="chat-body" id="chatBody">
             <!-- Messages dynamically added here -->
         </div>
-
-        <!-- Footer / Ask Form -->
         <div class="chat-footer">
             <form id="askForm" class="d-flex">
                 <input type="text" id="question" class="form-control me-2" placeholder="Ask something..." required>
-                <button type="submit" class="btn btn-success">Send</button>
+                <button type="submit" class="btn btn-send">Send</button>
             </form>
             <div id="suggestionBox" class="mt-2"></div>
         </div>
     </div>
-
     <script>
         const form = document.getElementById("askForm");
         const questionInput = document.getElementById("question");
         const chatBody = document.getElementById("chatBody");
         const suggestionBox = document.getElementById("suggestionBox");
-
         form.addEventListener("submit", function(e) {
             e.preventDefault();
             const question = questionInput.value.trim();
@@ -127,41 +235,23 @@
                 questionInput.value = "";
             }
         });
-
         function addMessage(text, sender) {
             const wrapper = document.createElement("div");
             wrapper.className = "bubble-wrapper";
-
             const bubble = document.createElement("div");
             bubble.className = sender === "user" ? "user-bubble" : "bot-bubble";
             bubble.innerText = text;
-
             wrapper.appendChild(bubble);
             chatBody.appendChild(wrapper);
             chatBody.scrollTop = chatBody.scrollHeight;
         }
-
         function fetchAndDisplayAnswer(question) {
-            fetch(`/ask?question=${encodeURIComponent(question)}`)
+            fetch(`/ask_anything?question=${encodeURIComponent(question)}`)
                 .then(res => res.json())
                 .then(data => {
                     addMessage(data.answer, "bot");
-                    showSuggestions(data.related_questions);
+                    suggestionBox.innerHTML = "";
                 });
-        }
-
-        function showSuggestions(questions) {
-            suggestionBox.innerHTML = "";
-            questions.forEach(q => {
-                const btn = document.createElement("button");
-                btn.className = "suggestion-btn";
-                btn.innerText = q;
-                btn.onclick = () => {
-                    questionInput.value = q;
-                    form.dispatchEvent(new Event("submit"));
-                };
-                suggestionBox.appendChild(btn);
-            });
         }
     </script>
 </body>
