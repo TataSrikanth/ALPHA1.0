@@ -8,7 +8,7 @@ from email.mime.text import MIMEText
 
 # ---------------- Flask App Setup ----------------
 app = Flask(__name__)
-app.secret_key = '7393288429b093121d51c001a9bfc9778094f31a2eaedd4951d6f01287403cca'  # Replace with a strong secret key
+app.secret_key = '***************'  # Replace with a strong secret key
 
 # ---------------- Database Connection ----------------
 db = mysql.connector.connect(
@@ -76,10 +76,10 @@ def verify_otp():
 
 def send_otp_email(email, otp):
     # Configure your SMTP server here
-    smtp_server = 'smtp.gmail.com'
+    smtp_server = '*******'
     smtp_port = 587
-    smtp_user = 'srikanthtata2002@gmail.com'
-    smtp_password = 'tqaacewtexhqihel'
+    smtp_user = '********'
+    smtp_password = '*******'
     msg = MIMEText(f'Your OTP for registration is: {otp}')
     msg['Subject'] = 'Your Registration OTP'
     msg['From'] = smtp_user
@@ -122,7 +122,7 @@ def ask_anything():
     if not question:
         return jsonify({'answer': 'Please enter a valid question!'}), 400
 
-    genai.configure(api_key="AIzaSyCmw_aUKU8FWhibBHoqVUQ5e-V0w_obshA")  # <-- Replace with your actual API key
+    genai.configure(api_key="*****************")  # <-- Replace with your actual API key
     try:
         model = genai.GenerativeModel('gemini-1.5-flash')  # or 'gemini-pro'
         response = model.generate_content(question)
